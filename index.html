@@ -37,6 +37,28 @@
     $(document).ready(function() {
       $('.sigPad').signaturePad({drawOnly: true});
     });
+
+      $(function() {
+          var aspectRatio = 0.2777777777777777777777777778;
+          var canvasWidth = 0, canvasHeight = 0;
+          $('#bodyContent_SignaturePad_sigPad canvas').each(function() { 
+              var canvas = $(this);
+              canvasWidth = canvas.width();
+              canvasHeight = canvasWidth * aspectRatio;
+              canvas.attr('width', canvasWidth).attr('height', canvasHeight);
+              canvas.off('touchmove.signaturepad').on('touchmove.signaturepad', function (e) { e.stopPropagation(); });
+          });
+          DrawSignaturePad_bodyContent_SignaturePad = $('#bodyContent_SignaturePad_sigPad').signaturePad({drawOnly:true, lineTop:80, lineWidth:0});
+          $(window).off('resize.signaturepad').on('resize.signaturepad', function() {
+              var canvas = $('.sigWrapper > canvas');
+              if (canvas.width() !== canvasWidth) {
+                  canvasWidth = canvas.width();
+                  canvasHeight = canvasWidth * aspectRatio;
+                  canvas.attr('width', canvasWidth).attr('height', canvasHeight);
+                  DrawSignaturePad_bodyContent_SignaturePad.regenerate(DrawSignaturePad_bodyContent_SignaturePad.getSignature());
+              }
+          });
+      });
   </script>
   <script src="./assets/json2.min.js"></script>
 </body>
