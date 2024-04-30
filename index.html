@@ -32,33 +32,62 @@
     <button type="submit">I accept the terms of this agreement.</button>
   </form>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="./jquery.signaturepad.js"></script>
   <script>
     $(document).ready(function() {
       $('.sigPad').signaturePad({drawOnly: true});
-    });
+      console.log('ready')
+      // $(function() {
+      //     var aspectRatio = 0.2777777777777777777777777778;
+      //     var canvasWidth = 0, canvasHeight = 0;
+      //     $('.sigPad canvas').each(function() { 
+      //         var canvas = $(this);
+      //         canvasWidth = canvas.width();
+      //         canvasHeight = canvasWidth * aspectRatio;
+      //         canvas.attr('width', canvasWidth).attr('height', canvasHeight);
+      //         canvas.off('touchmove.signaturepad').on('touchmove.signaturepad', function (e) { 
+      //           console.log('MIFASZ')
+      //           e.stopPropagation(); 
+      //         });
+      //     });
+      //     DrawSignaturePad_bodyContent_SignaturePad = $('.sigPad').signaturePad({drawOnly:true, lineTop:80, lineWidth:0})
+      //     $(window).off('resize.signaturepad').on('resize.signaturepad', function() {
+      //       var canvas = $('.sigWrapper > canvas');
+      //       if (canvas.width() !== canvasWidth) {
+      //           canvasWidth = canvas.width();
+      //           canvasHeight = canvasWidth * aspectRatio;
+      //           canvas.attr('width', canvasWidth).attr('height', canvasHeight);
+      //           DrawSignaturePad_bodyContent_SignaturePad.regenerate(DrawSignaturePad_bodyContent_SignaturePad.getSignature());
+      //       }
+      //   });
+      // });
+      $(function () {
+        'use strict';
+        
+        var touchHandler = function (event) {
+          var touch = event.changedTouches[0];
+          var simulatedEvent = document.createEvent("MouseEvent");
+          simulatedEvent.initMouseEvent({
+            touchstart: "mousedown",
+            touchmove: "mousemove",
+            touchend: "mouseup"
+          }[event.type], true, true, window, 1,
+          touch.screenX, touch.screenY,
+          touch.clientX, touch.clientY, false,
+          false, false, false, 0, null);
+          
+          
+          console.log('HOLABOLA', simulatedEvent);
+          touch.target.dispatchEvent(simulatedEvent);
+        };
 
-      $(function() {
-          var aspectRatio = 0.2777777777777777777777777778;
-          var canvasWidth = 0, canvasHeight = 0;
-          $('#bodyContent_SignaturePad_sigPad canvas').each(function() { 
-              var canvas = $(this);
-              canvasWidth = canvas.width();
-              canvasHeight = canvasWidth * aspectRatio;
-              canvas.attr('width', canvasWidth).attr('height', canvasHeight);
-              canvas.off('touchmove.signaturepad').on('touchmove.signaturepad', function (e) { e.stopPropagation(); });
-          });
-          DrawSignaturePad_bodyContent_SignaturePad = $('#bodyContent_SignaturePad_sigPad').signaturePad({drawOnly:true, lineTop:80, lineWidth:0});
-          $(window).off('resize.signaturepad').on('resize.signaturepad', function() {
-              var canvas = $('.sigWrapper > canvas');
-              if (canvas.width() !== canvasWidth) {
-                  canvasWidth = canvas.width();
-                  canvasHeight = canvasWidth * aspectRatio;
-                  canvas.attr('width', canvasWidth).attr('height', canvasHeight);
-                  DrawSignaturePad_bodyContent_SignaturePad.regenerate(DrawSignaturePad_bodyContent_SignaturePad.getSignature());
-              }
-          });
+        document.addEventListener("touchstart", touchHandler, true);
+        document.addEventListener("touchmove", touchHandler, true);
+        document.addEventListener("touchend", touchHandler, true);
+        document.addEventListener("touchcancel", touchHandler, true);
       });
+    });
   </script>
   <script src="./assets/json2.min.js"></script>
 </body>
